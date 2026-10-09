@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reyes del Barril · Asados al fuego real</title>
+<meta name="description" content="Chicharrón al barril, cocción lenta al fuego real. Arma tu pedido y envíalo por WhatsApp.">
+<meta property="og:title" content="Reyes del Barril · Asados al fuego real">
+<meta property="og:description" content="Arma tu pedido y envíalo por WhatsApp en un minuto.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#000; --panel:#120d09; --panel2:#1d140d;
+  --gold:#d9ac4f; --gold-d:#a9743c; --bone:#f1e4cb; --muted:#b8a487;
+  --flame:#ee6a14; --flame-d:#c4500b;
+  --title:"Cinzel","Trajan Pro","Georgia",serif;
+  --body:"Lora","Georgia","Times New Roman",serif;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--bone);font-family:var(--body);font-size:17px;line-height:1.5;padding-bottom:100px}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* Aviso */
+.aviso{background:linear-gradient(90deg,#3a1a06,#6b2d08,#3a1a06);color:var(--bone);text-align:center;padding:10px 16px;font-style:italic;font-size:15px;border-bottom:1px solid var(--gold-d)}
+.aviso:empty{display:none}
+
+/* Portada */
+.hero{max-width:720px;margin:0 auto;padding:18px 16px 6px;text-align:center}
+.hero img.barril{width:min(78%,360px);height:auto;display:block;margin:0 auto}
+.hero h1{font-family:var(--title);font-weight:500;font-size:clamp(20px,5.2vw,28px);color:var(--gold);margin-top:2px;letter-spacing:.5px}
+.plato{max-width:720px;margin:20px auto 0;padding:0 16px}
+.plato figure{position:relative;border:2px solid var(--gold-d);border-radius:14px;padding:5px;background:var(--black)}
+.plato img{width:100%;height:auto;display:block;border-radius:9px}
+.plato figcaption{position:absolute;left:5px;right:5px;bottom:5px;padding:34px 14px 12px;border-radius:0 0 9px 9px;background:linear-gradient(transparent,rgba(0,0,0,.88));text-align:center;font-style:italic;font-size:16px}
+
+/* Categorías */
+.tabs{position:sticky;top:0;z-index:5;background:var(--black);border-bottom:1px solid var(--gold-d);margin-top:22px;padding:10px 14px;display:flex;gap:8px;justify-content:center;overflow-x:auto}
+.tabs a{font-family:var(--title);font-weight:700;color:var(--gold);text-decoration:none;padding:8px 18px;border:1px solid var(--gold-d);border-radius:999px;flex:none}
+.tabs a:hover{background:var(--panel2)}
+
+/* Menú */
+main{max-width:720px;margin:0 auto;padding:6px 16px}
+section{padding-top:26px;scroll-margin-top:62px}
+h2{font-family:var(--title);font-weight:700;font-size:26px;color:var(--gold);margin-bottom:14px;text-align:center}
+.item{background:var(--panel);border:1px solid var(--gold-d);outline:1px solid var(--panel2);outline-offset:-5px;border-radius:12px;padding:18px 18px 16px;margin-bottom:14px}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.item h3{font-family:var(--title);font-weight:700;font-size:21px;color:var(--bone)}
+.price{font-family:var(--title);font-weight:700;font-size:26px;color:var(--gold);flex:none}
+.item .sub{font-style:italic;color:var(--muted);margin-top:2px}
+.item ul{list-style:none;padding:0;margin:10px 0 0;color:var(--bone);font-size:16px}
+.item li{padding-left:16px;position:relative}
+.item li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--flame)}
+.opts{display:flex;gap:8px;margin-top:14px;align-items:center;flex-wrap:wrap}
+.opts>span{color:var(--muted);font-size:15px}
+.chip{border:1.5px solid var(--gold-d);background:none;border-radius:999px;padding:8px 16px;cursor:pointer;min-height:44px}
+.chip[aria-pressed="true"]{background:var(--gold);color:#1a1006;border-color:var(--gold);font-weight:700}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:14px}
+.inorder{color:var(--muted);font-size:15px}
+.add{background:var(--flame);color:#fff;border:0;border-radius:10px;padding:12px 24px;font-weight:700;cursor:pointer;min-height:46px;margin-left:auto}
+.add:hover{background:var(--flame-d)}
+.add.ok{background:#2e7d46}
+
+/* Barra de pedido */
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:14px 16px calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,#000 35%);display:none}
+.bar.show{display:block}
+.bar button{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;max-width:720px;margin:0 auto;background:#25d366;color:#07240f;border:0;border-radius:14px;padding:16px 20px;font-weight:700;font-size:17px;cursor:pointer;box-shadow:0 6px 26px rgba(0,0,0,.7)}
+.bar button:hover{background:#1fb457}
+.bar svg{width:24px;height:24px;flex:none}
+.bar .l{display:flex;align-items:center;gap:10px;text-align:left}
+
+/* Hoja del pedido */
+dialog{border:1px solid var(--gold-d);padding:0;background:var(--panel);color:var(--bone);width:100%;max-width:560px;max-height:92vh;border-radius:20px 20px 0 0;margin:auto auto 0}
+dialog::backdrop{background:rgba(0,0,0,.78)}
+@media (min-width:600px){dialog{margin:auto;border-radius:20px}}
+.sheet{padding:22px 20px 24px}
+.sheet header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sheet h2{margin:0;font-size:26px}
+.close{background:var(--panel2);border:1px solid var(--gold-d);width:44px;height:44px;border-radius:50%;font-size:22px;cursor:pointer}
+.line{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--panel2)}
+.line small{color:var(--muted)}
+.qty{display:flex;align-items:center;gap:6px;flex:none}
+.qty button{width:44px;height:44px;border-radius:10px;border:1px solid var(--gold-d);background:var(--panel2);font-size:22px;font-weight:700;cursor:pointer}
+.qty button:hover{background:var(--flame-d)}
+.qty b{min-width:26px;text-align:center;font-size:18px}
+.totals{margin:12px 0 16px}
+.totals div{display:flex;justify-content:space-between;padding:3px 0;color:var(--muted)}
+.totals .total{color:var(--gold);font-family:var(--title);font-size:24px;font-weight:700;padding-top:8px}
+label{display:block;font-weight:500;margin:12px 0 6px}
+input,select,textarea{width:100%;background:var(--black);border:1.5px solid var(--gold-d);border-radius:10px;padding:12px;min-height:46px}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);outline:none}
+textarea{min-height:76px;resize:vertical}
+.err{color:#ff9d84;font-size:15px;margin-top:8px;min-height:22px}
+.send{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:4px;background:#25d366;color:#07240f;border:0;border-radius:12px;padding:16px;font-weight:700;font-size:18px;cursor:pointer}
+.send:hover{background:#1fb457}
+.send svg{width:24px;height:24px}
+.clear{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;margin-top:10px;padding:8px}
+.empty{color:var(--muted);padding:14px 0}
+
+footer{max-width:720px;margin:30px auto 0;padding:26px 20px;text-align:center;border-top:1px solid var(--gold-d)}
+footer strong{display:block;font-family:var(--title);font-weight:700;font-size:19px;color:var(--gold);margin-bottom:10px}
+footer p{color:var(--muted);font-size:15px;margin-bottom:12px}
+footer a{color:var(--bone);margin:0 10px;text-decoration:none;border-bottom:1px solid var(--gold-d)}
+</style>
+</head>
+<body>
+
+<div class="aviso" id="aviso"></div>
+
+<header class="hero">
+  <img class="barril" src="barril.jpg" alt="Reyes del Barril: barril coronado con llamas">
+  <h1>Asados al fuego real</h1>
+</header>
+
+<div class="plato">
+  <figure>
+    <img src="plato.jpg" alt="Chicharrón al barril con papas, piña asada y guacamole" loading="lazy">
+    <figcaption>Chicharrón al barril. Cocción lenta al fuego real.</figcaption>
+  </figure>
+</div>
+
+<nav class="tabs" id="tabs" aria-label="Categorías"></nav>
+<main id="menu"></main>
+
+<footer>
+  <strong>Calidad digna de la corona</strong>
+  <p>Todos nuestros productos son preparados al calor de barril.</p>
+  <a href="https://wa.me/573013919867">301 391 9867</a>
+  <a href="https://instagram.com/reyesdelbarril.col">@reyesdelbarril.col</a>
+</footer>
+
+<div class="bar" id="bar">
+  <button id="openCart" type="button">
+    <span class="l">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
+      <span id="barCount">Terminar pedido</span>
+    </span>
+    <span id="barTotal"></span>
+  </button>
+</div>
+
+<dialog id="cart" aria-labelledby="cartTitle">
+  <div class="sheet">
+    <header>
+      <h2 id="cartTitle">Tu pedido</h2>
+      <button class="close" id="closeCart" type="button" aria-label="Cerrar">×</button>
+    </header>
+    <div id="lines"></div>
+    <div class="totals">
+      <div><span>Subtotal</span><span id="subtotal"></span></div>
+      <div id="feeRow"><span>Domicilio</span><span id="fee"></span></div>
+      <div class="total"><span>Total</span><span id="total"></span></div>
+    </div>
+
+    <label for="name">Tu nombre</label>
+    <input id="name" autocomplete="name" placeholder="Ej: Carlos Pérez">
+
+    <label for="mode">¿Cómo lo quieres?</label>
+    <select id="mode"><option value="domicilio">Domicilio</option><option value="recoger">Lo recojo yo</option></select>
+
+    <div id="addrBox">
+      <label for="addr">Dirección y barrio</label>
+      <input id="addr" autocomplete="street-address" placeholder="Ej: Calle 10 # 5-20, barrio Centro">
+    </div>
+
+    <label for="pay">Forma de pago</label>
+    <select id="pay"><option>Efectivo</option><option>Transferencia</option><option>Nequi</option></select>
+
+    <label for="notes">Observaciones (opcional)</label>
+    <textarea id="notes" placeholder="Ej: sin piña, BBQ aparte, cambio de $100.000"></textarea>
+
+    <p class="err" id="err" role="alert"></p>
+    <button class="send" id="send" type="button">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
+      Enviar pedido por WhatsApp
+    </button>
+    <div style="text-align:center"><button class="clear" id="clear" type="button">Vaciar pedido</button></div>
+  </div>
+</dialog>
+
+<script>
+/* =====================  CONFIGURACIÓN (edita aquí)  ===================== */
+const WHATSAPP = "573013919867";   // Número con código de país, sin + ni espacios
+const DELIVERY_FEE = 0;            // Costo del domicilio en pesos. 0 = no se cobra
+const MIN_ORDER = 0;               // Pedido mínimo en pesos. 0 = sin mínimo
+const AVISO = "Este fin de semana encendemos el barril. Aparta tu pedido con tiempo."; // Déjalo "" para ocultarlo
+
+/* Menú. "opciones" es opcional: el cliente elige una antes de agregar. */
+const MENU = [
+  { cat:"Platos del barril", items:[
+    { id:"porcion", name:"Porción Real", sub:"220 g de chicharrón al barril", price:25000,
+      lista:["Piña asada al barril","Guacamole","BBQ de la casa"], opciones:["Papas","Bollo"] },
+    { id:"banquete", name:"Banquete Real", sub:"340 g de chicharrón al barril", price:35000,
+      lista:["Piña asada al barril","Guacamole","BBQ de la casa"], opciones:["Papas","Bollo"] },
+    { id:"taquitos", name:"Taquitos del Reino", sub:"3 taquitos de chicharrón al barril", price:27000,
+      lista:["Con piña","Pico de gallo de casa"] },
+    { id:"picada", name:"Picada Festín Real", sub:"Para quienes comen como reyes", price:60000,
+      lista:["430 g de chicharrón al barril","200 g de chorizo artesanal","Patacones","Piña asada al barril","Salsa BBQ","Guacamole"] }
+  ]},
+  { cat:"Adicionales", items:[
+    { id:"chorizo", name:"Chorizo Imperial", sub:"", price:6000 }
+  ]}
+];
+/* ======================================================================= */
+
+const $ = id => document.getElementById(id);
+const money = n => "$" + Math.round(n).toLocaleString("es-CO");
+const all = MENU.flatMap(c => c.items);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\W+/g,"-");
+
+/* El carrito guarda claves "id" o "id|opcion" con su cantidad */
+const parse = key => { const [id,opt] = key.split("|"); return { p: all.find(x => x.id === id), opt }; };
+let cart = {};
+try { cart = JSON.parse(localStorage.getItem("rdb_cart") || "{}"); } catch(e){}
+Object.keys(cart).forEach(k => { if(!parse(k).p) delete cart[k]; });
+const sel = {}; all.forEach(p => { if(p.opciones) sel[p.id] = p.opciones[0]; });
+
+function save(){ try{ localStorage.setItem("rdb_cart", JSON.stringify(cart)); }catch(e){} }
+
+function renderMenu(){
+  $("aviso").textContent = AVISO;
+  $("tabs").innerHTML = MENU.map(c => `<a href="#${slug(c.cat)}">${esc(c.cat)}</a>`).join("");
+  $("menu").innerHTML = MENU.map(c => `
+    <section id="${slug(c.cat)}"><h2>${esc(c.cat)}</h2>
+    ${c.items.map(p => `
+      <article class="item" data-id="${p.id}">
+        <div class="top"><h3>${esc(p.name)}</h3><div class="price">${money(p.price)}</div></div>
+        ${p.sub ? `<p class="sub">${esc(p.sub)}</p>` : ""}
+        ${p.lista ? `<ul>${p.lista.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}
+        ${p.opciones ? `<div class="opts" role="group" aria-label="Acompañante"><span>Con:</span>${p.opciones.map(o =>
+          `<button type="button" class="chip" data-opt="${esc(o)}" aria-pressed="${sel[p.id]===o}">${esc(o)}</button>`).join("")}</div>` : ""}
+        <div class="row"><span class="inorder"></span><button type="button" class="add" data-add>Agregar</button></div>
+      </article>`).join("")}
+    </section>`).join("");
+  refreshCounts();
+}
+
+function refreshCounts(){
+  document.querySelectorAll(".item").forEach(el => {
+    const id = el.dataset.id;
+    const q = Object.entries(cart).filter(([k]) => k.split("|")[0] === id).reduce((s,[,v]) => s + v, 0);
+    el.querySelector(".inorder").textContent = q ? `En tu pedido: ${q}` : "";
+  });
+  updateBar();
+}
+
+function totals(){
+  const sub = Object.entries(cart).reduce((s,[k,q]) => s + parse(k).p.price * q, 0);
+  const count = Object.values(cart).reduce((a,b) => a + b, 0);
+  const fee = ($("mode").value === "domicilio" && sub > 0) ? DELIVERY_FEE : 0;
+  return { sub, count, fee, total: sub + fee };
+}
+
+function updateBar(){
+  const t = totals();
+  $("bar").classList.toggle("show", t.count > 0);
+  $("barCount").textContent = `Terminar pedido (${t.count})`;
+  $("barTotal").textContent = money(t.sub);
+}
+
+function change(key, d){
+  cart[key] = Math.max(0, (cart[key] || 0) + d);
+  if(!cart[key]) delete cart[key];
+  save(); refreshCounts();
+  if($("cart").open) renderCart();
+}
+
+function renderCart(){
+  const t = totals();
+  $("lines").innerHTML = !t.count ? `<p class="empty">Aún no has agregado productos.</p>` :
+    Object.entries(cart).map(([k,q]) => {
+      const {p,opt} = parse(k);
+      return `<div class="line" data-key="${esc(k)}"><div>${esc(p.name)}${opt ? ` (${esc(opt)})` : ""}<br><small>${q} × ${money(p.price)}</small></div>
+        <div class="qty"><button data-act="dec" aria-label="Quitar uno de ${esc(p.name)}">−</button><b>${q}</b><button data-act="inc" aria-label="Agregar uno de ${esc(p.name)}">+</button></div></div>`;
+    }).join("");
+  const dom = $("mode").value === "domicilio";
+  $("subtotal").textContent = money(t.sub);
+  $("feeRow").style.display = DELIVERY_FEE > 0 && dom ? "flex" : "none";
+  $("fee").textContent = money(t.fee);
+  $("total").textContent = money(t.total);
+  $("addrBox").style.display = dom ? "block" : "none";
+}
+
+function send(){
+  const t = totals(), err = $("err");
+  const name = $("name").value.trim(), addr = $("addr").value.trim();
+  const dom = $("mode").value === "domicilio";
+  err.textContent = "";
+  if(!t.count){ err.textContent = "Agrega al menos un producto."; return; }
+  if(MIN_ORDER && t.sub < MIN_ORDER){ err.textContent = `El pedido mínimo es ${money(MIN_ORDER)}.`; return; }
+  if(!name){ err.textContent = "Escribe tu nombre."; $("name").focus(); return; }
+  if(dom && !addr){ err.textContent = "Escribe tu dirección para el domicilio."; $("addr").focus(); return; }
+
+  const lines = Object.entries(cart).map(([k,q]) => {
+    const {p,opt} = parse(k);
+    return `• ${q} x ${p.name}${opt ? " (" + opt + ")" : ""} - ${money(p.price*q)}`;
+  });
+  const notes = $("notes").value.trim();
+  const msg = [
+    "*Nuevo pedido - Reyes del Barril*", "",
+    `*Cliente:* ${name}`,
+    `*Entrega:* ${dom ? "Domicilio" : "Recoge en el local"}`,
+    dom ? `*Dirección:* ${addr}` : null,
+    `*Pago:* ${$("pay").value}`, "",
+    "*Pedido:*", ...lines, "",
+    `Subtotal: ${money(t.sub)}`,
+    t.fee ? `Domicilio: ${money(t.fee)}` : null,
+    `*Total: ${money(t.total)}*`,
+    notes ? `\n*Observaciones:* ${notes}` : null
+  ].filter(x => x !== null).join("\n");
+
+  try{ localStorage.setItem("rdb_client", JSON.stringify({name, addr, mode:$("mode").value, pay:$("pay").value})); }catch(e){}
+  window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`, "_blank");
+}
+
+/* Eventos */
+document.addEventListener("click", e => {
+  const chip = e.target.closest(".chip");
+  if(chip){
+    const art = chip.closest(".item");
+    sel[art.dataset.id] = chip.dataset.opt;
+    art.querySelectorAll(".chip").forEach(c => c.setAttribute("aria-pressed", c === chip));
+    return;
+  }
+  const add = e.target.closest("[data-add]");
+  if(add){
+    const id = add.closest(".item").dataset.id;
+    change(sel[id] ? `${id}|${sel[id]}` : id, 1);
+    add.textContent = "Agregado ✓"; add.classList.add("ok");
+    setTimeout(() => { add.textContent = "Agregar"; add.classList.remove("ok"); }, 900);
+    return;
+  }
+  const act = e.target.closest("[data-act]");
+  if(act) change(act.closest("[data-key]").dataset.key, act.dataset.act === "inc" ? 1 : -1);
+});
+$("openCart").onclick = () => { renderCart(); $("cart").showModal(); };
+$("closeCart").onclick = () => $("cart").close();
+$("cart").addEventListener("click", e => { if(e.target === $("cart")) $("cart").close(); });
+$("mode").onchange = () => { renderCart(); updateBar(); };
+$("send").onclick = send;
+$("clear").onclick = () => { cart = {}; save(); refreshCounts(); $("cart").close(); };
+
+/* Recordar datos del cliente */
+try{
+  const c = JSON.parse(localStorage.getItem("rdb_client") || "null");
+  if(c){ $("name").value = c.name||""; $("addr").value = c.addr||""; $("mode").value = c.mode||"domicilio"; $("pay").value = c.pay||"Efectivo"; }
+}catch(e){}
+
+renderMenu();
+</script>
+</body>
+</html>
