@@ -11,7 +11,7 @@
 <link rel="icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --black:#000; --panel:#120d09; --panel2:#1d140d;
@@ -190,6 +190,54 @@ main{max-width:1100px}
 .cf{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding-top:8px}
 .cf .add{margin-left:0}
 @media (min-width:700px){.rail{scroll-padding-left:2px}}
+
+/* ===== Banners apilados y tarjetas con el estilo de la referencia ===== */
+.tabs{position:static;z-index:auto;background:transparent;border:0;flex-direction:column;align-items:stretch;justify-content:flex-start;overflow:visible;gap:12px;max-width:440px;margin:30px auto 0;padding:0 16px}
+.tabs a{flex:none;display:flex;align-items:center;justify-content:center;min-height:54px;padding:12px 16px;border-radius:10px;font-family:"Cinzel","Georgia",serif;font-weight:600;font-size:17px;letter-spacing:.04em;background:var(--steel-dk);border:1px solid #8b877e}
+.tabs a:hover{background:var(--steel-dk);filter:brightness(1.25)}
+section{scroll-margin-top:16px}
+.rail{gap:24px}
+.item{flex:0 0 min(82%,350px);background:#101010;border:1px solid #2a2a2a;box-shadow:none;border-radius:12px}
+.ph{aspect-ratio:31/20}
+.cb{padding:18px 16px 16px}
+.cb h3{font-family:"Roboto",Arial,sans-serif;font-weight:500;font-size:19px;text-transform:none;letter-spacing:0;line-height:1.3}
+.desc{font-family:"Roboto",Arial,sans-serif;color:#9a9a9a;font-size:14px;line-height:1.5;margin-top:14px}
+.cb .opts{font-family:"Roboto",Arial,sans-serif}
+.item .price{font-family:"Roboto",Arial,sans-serif;font-weight:700;font-size:22px;color:#fff;background:none;-webkit-text-fill-color:#fff;filter:none}
+
+/* Tarjetas del menú: acero del barril con el diseño nuevo */
+.item{background:var(--steel-dk);border:1px solid #8b877e;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -3px 6px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.55)}
+.desc{color:#e0d4bf}
+.inorder{color:#cdbfa8}
+.cb .opts>span{color:#e0d4bf}
+
+/* ===== Estilo plano como la referencia (sin acero) ===== */
+:root{--tan:#e8cba5;--tan-d:#1a1208}
+.gold,h2,.item h3,.hero .tag,footer strong{background:none;-webkit-text-fill-color:var(--tan);color:var(--tan);filter:none;text-shadow:none}
+.nav{background:#0d0d0d;border-bottom:1px solid #262626;box-shadow:none}
+.nav .links a:hover .gold,.tabs a:hover .gold{filter:none;-webkit-text-fill-color:#fff;color:#fff}
+.tabs a,.chip,.add,.hero .cta,.ruta{background:none;border:0;box-shadow:none}
+.tabs a:hover,.add:hover,.hero .cta:hover,.ruta:hover{background:none;filter:none}
+.tabs a{background:#101010;border:1px solid #3a3a3a}
+.tabs a:hover{background:#1a1a1a}
+.add,.hero .cta,.ruta{background:var(--tan)}
+.add:hover,.hero .cta:hover,.ruta:hover{background:#f2dfc2}
+.add .gold,.hero .cta .gold,.ruta .gold{-webkit-text-fill-color:var(--tan-d);color:var(--tan-d)}
+.add.ok{background:#bfe3c6}
+.chip{border:1px solid #6b5b45}
+.chip[aria-pressed="true"]{background:var(--tan);border-color:var(--tan)}
+.arrow{background:#1a1a1a;border:1px solid #333;color:#fff;box-shadow:none}
+.arrow:hover{filter:none;background:#2a2a2a}
+.item{background:#101010;border:1px solid #2a2a2a;box-shadow:none}
+.mapa{background:#101010;border:1px solid #2a2a2a;box-shadow:none}
+.tagp{background:var(--tan);color:var(--tan-d);box-shadow:none;font-weight:500}
+.desc,.inorder,.cb .opts>span{color:#9a9a9a}
+.cf .add{font-family:"Roboto",Arial,sans-serif;font-size:15px;min-height:38px;padding:0 20px;border-radius:8px}
+.cf .add .gold{font-weight:400}
+.ruta,.hero .cta{border-radius:6px}
+
+/* Banners: misma letra que los nombres de los platos (Roboto) */
+.tabs a{font-family:"Roboto",Arial,sans-serif;font-weight:500;font-size:17px;letter-spacing:.03em}
 </style>
 </head>
 <body>
@@ -334,7 +382,9 @@ const sel = {}; all.forEach(p => { if(p.opciones) sel[p.id] = p.opciones[0]; });
 function save(){ try{ localStorage.setItem("rdb_cart", JSON.stringify(cart)); }catch(e){} }
 
 function renderMenu(){
-  $("tabs").innerHTML = MENU.map(c => `<a href="#${slug(c.cat)}"><span class="gold">${esc(c.cat)}</span></a>`).join("");
+  $("tabs").innerHTML = MENU.map(c => `<a href="#${slug(c.cat)}"><span class="gold">${esc(c.cat)}</span></a>`).join("")
+    + `<a href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Hola, quiero hacer una reserva")}" target="_blank" rel="noopener"><span class="gold">Reservas</span></a>`
+    + `<a href="#ubicacion"><span class="gold">Encuéntranos</span></a>`;
   $("menu").innerHTML = MENU.map(c => `
     <section id="${slug(c.cat)}">
       <div class="shead"><h2>${esc(c.cat)}</h2>
@@ -454,7 +504,7 @@ document.addEventListener("click", e => {
   const ar = e.target.closest(".arrow");
   if(ar){
     const r = ar.closest("section").querySelector(".rail");
-    r.scrollBy({ left: Number(ar.dataset.dir) * (r.firstElementChild.getBoundingClientRect().width + 14), behavior: "smooth" });
+    r.scrollBy({ left: Number(ar.dataset.dir) * (r.firstElementChild.getBoundingClientRect().width + (parseFloat(getComputedStyle(r).columnGap) || 24)), behavior: "smooth" });
     return;
   }
   const chip = e.target.closest(".chip");
