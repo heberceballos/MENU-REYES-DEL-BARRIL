@@ -31,7 +31,7 @@ button,input,select,textarea{font:inherit;color:inherit}
 .nav .left{display:flex;align-items:center;gap:4px}
 .nav .brand img{display:block;height:40px;width:auto;margin:9px 10px 9px 0}
 .nav .links{display:flex}
-.nav .links a{font-family:var(--title);font-weight:500;font-size:17px;color:var(--bone);text-decoration:none;padding:0 11px;min-height:58px;display:flex;align-items:center}
+.nav .links a{font-family:var(--title);font-weight:600;font-size:17px;color:var(--bone);text-decoration:none;padding:0 11px;min-height:58px;display:flex;align-items:center}
 .nav .links a:hover{color:var(--gold)}
 .nav .wa{width:44px;height:44px;display:flex;align-items:center;justify-content:center;color:#25d366}
 .nav .wa svg{width:28px;height:28px}
@@ -135,6 +135,35 @@ footer p{color:var(--muted);font-size:15px;margin-bottom:12px}
 footer a{color:var(--bone);margin:0 10px;text-decoration:none;border-bottom:1px solid var(--gold-d)}
 h2,.item h3,.tabs a,footer strong,.sheet h2{text-transform:uppercase;letter-spacing:.02em}
 .price{letter-spacing:.01em}
+
+/* ===== Acero inoxidable y letras doradas ===== */
+:root{
+  --brushed:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.006 .85' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.6 -.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23f)' opacity='.5'/%3E%3C/svg%3E");
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 -.5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='.55'/%3E%3C/svg%3E");
+  --steel:linear-gradient(180deg,rgba(255,255,255,.32),rgba(255,255,255,0) 24%,rgba(0,0,0,0) 58%,rgba(0,0,0,.34)),var(--brushed),linear-gradient(100deg,#2f2d2a 0%,#5d5a53 18%,#34322f 36%,#6a665f 54%,#2e2c29 74%,#52504a 100%);
+  --steel-dk:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,0) 24%,rgba(0,0,0,0) 55%,rgba(0,0,0,.4)),var(--brushed),linear-gradient(100deg,#24221f 0%,#46433d 20%,#292724 38%,#514e47 56%,#242220 76%,#3f3c37 100%);
+  --goldfill:var(--grain),linear-gradient(180deg,#fff6c8 0%,#fbe08a 26%,#ecb94f 48%,#b57a22 55%,#e2b244 72%,#fbe38e 100%);
+  --rivet:radial-gradient(circle,#e6e0d2 0 1.3px,#6d695f 2.4px,#15130f 3.6px,transparent 4.3px);
+}
+/* Letras doradas con textura */
+.gold,h2,.item h3,.price,.hero .tag,footer strong{color:#e8c36b}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .gold,h2,.item h3,.price,.hero .tag,footer strong{background:var(--goldfill);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;filter:drop-shadow(0 1px 1px rgba(0,0,0,.95)) drop-shadow(0 0 2px rgba(0,0,0,.6))}
+}
+.gold{display:inline-block;line-height:1.2}
+h2,.item h3,.price,.hero .tag,footer strong{line-height:1.2}
+.hero .tag{text-shadow:none}
+/* Acero cepillado */
+.nav{background:var(--steel-dk);border-bottom:1px solid #8b877e;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 3px 10px rgba(0,0,0,.6)}
+.tabs a,.chip,.add,.hero .cta,.ruta{background:var(--steel);border:1px solid #9a968c;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -2px 3px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.6)}
+.tabs a:hover,.add:hover,.hero .cta:hover,.ruta:hover{background:var(--steel);filter:brightness(1.18)}
+.add.ok{background:linear-gradient(180deg,rgba(255,255,255,.3),rgba(0,0,0,.25)),linear-gradient(#3f9d5c,#2e7d46)}
+.nav .links a:hover .gold,.tabs a:hover .gold{filter:brightness(1.2) drop-shadow(0 1px 1px rgba(0,0,0,.9))}
+.chip[aria-pressed="true"]{background:linear-gradient(180deg,#f8dd8a,#d9a93f 52%,#b3832a);border-color:#f3d27a}
+.chip[aria-pressed="true"] .gold{background:none;-webkit-text-fill-color:#1a1006;color:#1a1006;filter:none}
+.item{position:relative;background:var(--steel-dk);border:1px solid #7f7b72;outline:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -3px 6px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.55)}
+.item::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:var(--rivet) left 7px top 7px/10px 10px no-repeat,var(--rivet) right 7px top 7px/10px 10px no-repeat,var(--rivet) left 7px bottom 7px/10px 10px no-repeat,var(--rivet) right 7px bottom 7px/10px 10px no-repeat}
+.mapa{background:var(--steel);border:1px solid #9a968c;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 12px rgba(0,0,0,.6)}
 </style>
 </head>
 <body>
@@ -150,8 +179,8 @@ h2,.item h3,.tabs a,footer strong,.sheet h2{text-transform:uppercase;letter-spac
   <div class="left">
     <a class="brand" href="#inicio" aria-label="Reyes del Barril, inicio"><img src="logo.png" alt="Reyes del Barril"></a>
     <nav class="links" aria-label="Principal">
-      <a href="#menu">Menú</a>
-      <a href="https://wa.me/573013919867?text=Hola%2C%20quiero%20hacer%20un%20pedido">Contacto</a>
+      <a href="#menu"><span class="gold">Menú</span></a>
+      <a href="https://wa.me/573013919867?text=Hola%2C%20quiero%20hacer%20un%20pedido"><span class="gold">Contacto</span></a>
     </nav>
   </div>
   <a class="wa" href="https://wa.me/573013919867?text=Hola%2C%20quiero%20hacer%20un%20pedido" aria-label="Escribir por WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg></a>
@@ -167,7 +196,7 @@ h2,.item h3,.tabs a,footer strong,.sheet h2{text-transform:uppercase;letter-spac
     </span>
   </h1>
   <p class="tag">Asados al fuego real</p>
-  <a class="cta" href="#menu">Ver menú</a>
+  <a class="cta" href="#menu"><span class="gold">Ver menú</span></a>
 </div>
 
 <nav class="tabs" id="tabs" aria-label="Categorías"></nav>
@@ -177,7 +206,7 @@ h2,.item h3,.tabs a,footer strong,.sheet h2{text-transform:uppercase;letter-spac
   <h2>Dónde estamos</h2>
   <p id="dir"></p>
   <div class="mapa"><iframe id="mapa" title="Mapa de Reyes del Barril" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
-  <a class="ruta" id="ruta" href="#" target="_blank" rel="noopener">Cómo llegar</a>
+  <a class="ruta" id="ruta" href="#" target="_blank" rel="noopener"><span class="gold">Cómo llegar</span></a>
 </div>
 
 <footer>
@@ -279,7 +308,7 @@ const sel = {}; all.forEach(p => { if(p.opciones) sel[p.id] = p.opciones[0]; });
 function save(){ try{ localStorage.setItem("rdb_cart", JSON.stringify(cart)); }catch(e){} }
 
 function renderMenu(){
-  $("tabs").innerHTML = MENU.map(c => `<a href="#${slug(c.cat)}">${esc(c.cat)}</a>`).join("");
+  $("tabs").innerHTML = MENU.map(c => `<a href="#${slug(c.cat)}"><span class="gold">${esc(c.cat)}</span></a>`).join("");
   $("menu").innerHTML = MENU.map(c => `
     <section id="${slug(c.cat)}"><h2>${esc(c.cat)}</h2>
     ${c.items.map(p => `
@@ -288,8 +317,8 @@ function renderMenu(){
         ${p.sub ? `<p class="sub">${esc(p.sub)}</p>` : ""}
         ${p.lista ? `<ul>${p.lista.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}
         ${p.opciones ? `<div class="opts" role="group" aria-label="Acompañante"><span>Con:</span>${p.opciones.map(o =>
-          `<button type="button" class="chip" data-opt="${esc(o)}" aria-pressed="${sel[p.id]===o}">${esc(o)}</button>`).join("")}</div>` : ""}
-        <div class="row"><span class="inorder"></span><button type="button" class="add" data-add>Agregar</button></div>
+          `<button type="button" class="chip" data-opt="${esc(o)}" aria-pressed="${sel[p.id]===o}"><span class="gold">${esc(o)}</span></button>`).join("")}</div>` : ""}
+        <div class="row"><span class="inorder"></span><button type="button" class="add" data-add><span class="gold">Agregar</span></button></div>
       </article>`).join("")}
     </section>`).join("");
   refreshCounts();
@@ -386,8 +415,8 @@ document.addEventListener("click", e => {
   if(add){
     const id = add.closest(".item").dataset.id;
     change(sel[id] ? `${id}|${sel[id]}` : id, 1);
-    add.textContent = "Agregado ✓"; add.classList.add("ok");
-    setTimeout(() => { add.textContent = "Agregar"; add.classList.remove("ok"); }, 900);
+    add.firstElementChild.textContent = "Agregado ✓"; add.classList.add("ok");
+    setTimeout(() => { add.firstElementChild.textContent = "Agregar"; add.classList.remove("ok"); }, 900);
     return;
   }
   const act = e.target.closest("[data-act]");
