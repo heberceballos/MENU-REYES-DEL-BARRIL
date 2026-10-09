@@ -164,6 +164,32 @@ h2,.item h3,.price,.hero .tag,footer strong{line-height:1.2}
 .item{position:relative;background:var(--steel-dk);border:1px solid #7f7b72;outline:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.22),inset 0 -3px 6px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.55)}
 .item::before{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:var(--rivet) left 7px top 7px/10px 10px no-repeat,var(--rivet) right 7px top 7px/10px 10px no-repeat,var(--rivet) left 7px bottom 7px/10px 10px no-repeat,var(--rivet) right 7px bottom 7px/10px 10px no-repeat}
 .mapa{background:var(--steel);border:1px solid #9a968c;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 4px 12px rgba(0,0,0,.6)}
+
+/* ===== Menú en carrusel con fotos ===== */
+main{max-width:1100px}
+.shead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.shead h2{text-align:left;margin:0;font-size:clamp(26px,6.5vw,42px)}
+.arrows{display:flex;gap:8px;flex:none}
+.arrows[hidden]{display:none}
+.arrow{width:44px;height:44px;border-radius:50%;border:1px solid #9a968c;background:var(--steel);color:#f6d77d;font-size:28px;line-height:1;padding:0 0 4px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 2px 6px rgba(0,0,0,.6)}
+.arrow:hover{filter:brightness(1.25)}
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 16px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.rail::-webkit-scrollbar{display:none}
+.item{flex:0 0 min(82%,310px);scroll-snap-align:start;display:flex;flex-direction:column;padding:0;margin:0;overflow:hidden;border-radius:12px}
+.item::before{display:none}
+.ph{position:relative;aspect-ratio:7/5;background:#0b0907;overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph.sin{background:radial-gradient(circle at 50% 55%,#3b2412,#120b06 75%);display:flex;align-items:center;justify-content:center}
+.ph.sin .ph-logo{width:auto;height:88%;object-fit:contain;opacity:.75}
+.tagp{position:absolute;top:10px;right:10px;background:linear-gradient(180deg,#f8dd8a,#d9a93f 55%,#b3832a);color:#1a1006;font-weight:700;font-size:12px;line-height:1;padding:6px 10px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,.5)}
+.cb{display:flex;flex-direction:column;flex:1;padding:16px}
+.cb h3{font-size:21px}
+.desc{color:#cdbfa8;font-size:14px;line-height:1.5;margin-top:8px}
+.cb .opts{margin-top:12px}
+.inorder{min-height:18px;margin-top:8px;font-size:13px;color:var(--muted)}
+.cf{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:auto;padding-top:8px}
+.cf .add{margin-left:0}
+@media (min-width:700px){.rail{scroll-padding-left:2px}}
 </style>
 </head>
 <body>
@@ -274,20 +300,20 @@ const DIRECCION_TEXTO = "Huellas Juan Pablo II, Cartagena";        // Opcional: 
 const MAPA_EMBED = "";             // Opcional: pega aquí el enlace (src) de Compartir > Insertar un mapa de Google Maps
 const MIN_ORDER = 0;               // Pedido mínimo en pesos. 0 = sin mínimo
 
-/* Menú. "opciones" es opcional: el cliente elige una antes de agregar. */
+/* Menú. foto, etiqueta y opciones son opcionales. foto = nombre del archivo de la imagen (sin foto se muestra el barril). */
 const MENU = [
   { cat:"Platos del barril", items:[
-    { id:"porcion", name:"Porción Real", sub:"220 g de chicharrón al barril", price:25000,
-      lista:["Piña asada al barril","Guacamole","BBQ de la casa"], opciones:["Papas","Bollo"] },
-    { id:"banquete", name:"Banquete Real", sub:"340 g de chicharrón al barril", price:35000,
-      lista:["Piña asada al barril","Guacamole","BBQ de la casa"], opciones:["Papas","Bollo"] },
-    { id:"taquitos", name:"Taquitos del Reino", sub:"3 taquitos de chicharrón al barril", price:27000,
-      lista:["Con piña","Pico de gallo de casa"] },
-    { id:"picada", name:"Picada Festín Real", sub:"Para quienes comen como reyes", price:60000,
-      lista:["430 g de chicharrón al barril","200 g de chorizo artesanal","Patacones","Piña asada al barril","Salsa BBQ","Guacamole"] }
+    { id:"porcion", name:"Porción Real", price:25000, etiqueta:"220 g", foto:"porcion-real.jpg",
+      desc:"220 g de chicharrón al barril con piña asada al barril, guacamole y BBQ de la casa.", opciones:["Papas","Bollo"] },
+    { id:"banquete", name:"Banquete Real", price:35000, etiqueta:"340 g", foto:"banquete-real.jpg",
+      desc:"340 g de chicharrón al barril con piña asada al barril, guacamole y BBQ de la casa.", opciones:["Papas","Bollo"] },
+    { id:"taquitos", name:"Taquitos del Reino", price:27000, etiqueta:"3 taquitos", foto:"taquitos-reino.jpg",
+      desc:"3 taquitos de chicharrón al barril con piña y pico de gallo de casa." },
+    { id:"picada", name:"Picada Festín Real", price:60000, foto:"picada-festin.jpg",
+      desc:"430 g de chicharrón al barril, 200 g de chorizo artesanal, patacones, piña asada al barril, salsa BBQ y guacamole." }
   ]},
   { cat:"Adicionales", items:[
-    { id:"chorizo", name:"Chorizo Imperial", sub:"", price:6000 }
+    { id:"chorizo", name:"Chorizo Imperial", price:6000, foto:"chorizo-imperial.jpg", desc:"Chorizo artesanal antioqueño." }
   ]}
 ];
 /* ======================================================================= */
@@ -310,18 +336,39 @@ function save(){ try{ localStorage.setItem("rdb_cart", JSON.stringify(cart)); }c
 function renderMenu(){
   $("tabs").innerHTML = MENU.map(c => `<a href="#${slug(c.cat)}"><span class="gold">${esc(c.cat)}</span></a>`).join("");
   $("menu").innerHTML = MENU.map(c => `
-    <section id="${slug(c.cat)}"><h2>${esc(c.cat)}</h2>
-    ${c.items.map(p => `
-      <article class="item" data-id="${p.id}">
-        <div class="top"><h3>${esc(p.name)}</h3><div class="price">${money(p.price)}</div></div>
-        ${p.sub ? `<p class="sub">${esc(p.sub)}</p>` : ""}
-        ${p.lista ? `<ul>${p.lista.map(l => `<li>${esc(l)}</li>`).join("")}</ul>` : ""}
-        ${p.opciones ? `<div class="opts" role="group" aria-label="Acompañante"><span>Con:</span>${p.opciones.map(o =>
-          `<button type="button" class="chip" data-opt="${esc(o)}" aria-pressed="${sel[p.id]===o}"><span class="gold">${esc(o)}</span></button>`).join("")}</div>` : ""}
-        <div class="row"><span class="inorder"></span><button type="button" class="add" data-add><span class="gold">Agregar</span></button></div>
-      </article>`).join("")}
+    <section id="${slug(c.cat)}">
+      <div class="shead"><h2>${esc(c.cat)}</h2>
+        <div class="arrows" hidden>
+          <button type="button" class="arrow" data-dir="-1" aria-label="Anterior">‹</button>
+          <button type="button" class="arrow" data-dir="1" aria-label="Siguiente">›</button>
+        </div>
+      </div>
+      <div class="rail" tabindex="0" role="region" aria-label="${esc(c.cat)}">
+      ${c.items.map(p => `
+        <article class="item" data-id="${p.id}">
+          <div class="ph${p.foto ? "" : " sin"}">
+            ${p.foto ? `<img src="${esc(p.foto)}" alt="${esc(p.name)}" loading="lazy">` : `<img class="ph-logo" src="barril.webp" alt="" loading="lazy">`}
+            ${p.etiqueta ? `<span class="tagp">${esc(p.etiqueta)}</span>` : ""}
+          </div>
+          <div class="cb">
+            <h3>${esc(p.name)}</h3>
+            ${p.desc ? `<p class="desc">${esc(p.desc)}</p>` : ""}
+            ${p.opciones ? `<div class="opts" role="group" aria-label="Acompañante"><span>Con:</span>${p.opciones.map(o =>
+              `<button type="button" class="chip" data-opt="${esc(o)}" aria-pressed="${sel[p.id]===o}"><span class="gold">${esc(o)}</span></button>`).join("")}</div>` : ""}
+            <span class="inorder"></span>
+            <div class="cf"><div class="price">${money(p.price)}</div><button type="button" class="add" data-add><span class="gold">Agregar</span></button></div>
+          </div>
+        </article>`).join("")}
+      </div>
     </section>`).join("");
-  refreshCounts();
+  refreshCounts(); updateArrows();
+}
+
+function updateArrows(){
+  document.querySelectorAll("#menu section").forEach(sec => {
+    const r = sec.querySelector(".rail"), a = sec.querySelector(".arrows");
+    if(r && a) a.hidden = r.scrollWidth <= r.clientWidth + 4;
+  });
 }
 
 function refreshCounts(){
@@ -404,6 +451,12 @@ function send(){
 
 /* Eventos */
 document.addEventListener("click", e => {
+  const ar = e.target.closest(".arrow");
+  if(ar){
+    const r = ar.closest("section").querySelector(".rail");
+    r.scrollBy({ left: Number(ar.dataset.dir) * (r.firstElementChild.getBoundingClientRect().width + 14), behavior: "smooth" });
+    return;
+  }
   const chip = e.target.closest(".chip");
   if(chip){
     const art = chip.closest(".item");
@@ -446,6 +499,7 @@ try{
 })();
 
 renderMenu();
+window.addEventListener("resize", updateArrows);
 
 /* Animación de las llamas (se detiene si la persona prefiere menos movimiento) */
 (function(){
