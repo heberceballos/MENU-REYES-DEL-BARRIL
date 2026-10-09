@@ -240,7 +240,9 @@ h2,.item h3,.tabs a,footer strong,.sheet h2{text-transform:uppercase;letter-spac
 /* =====================  CONFIGURACIÓN (edita aquí)  ===================== */
 const WHATSAPP = "573013919867";   // Número con código de país, sin + ni espacios
 const DELIVERY_FEE = 0;            // Costo del domicilio en pesos. 0 = no se cobra
-const DIRECCION = "Cartagena, Bolívar, Colombia"; // Pon aquí tu dirección exacta o el nombre del negocio como sale en Google Maps
+const BUSQUEDA_MAPS = "Reyes del Barril, Cartagena, Bolívar, Colombia"; // Nombre de tu negocio como aparece en Google Maps + ciudad (así sale tu pin)
+const DIRECCION_TEXTO = "";        // Opcional: dirección escrita que se muestra sobre el mapa. Vacío = no se muestra
+const MAPA_EMBED = "";             // Opcional: pega aquí el enlace (src) de Compartir > Insertar un mapa de Google Maps
 const MIN_ORDER = 0;               // Pedido mínimo en pesos. 0 = sin mínimo
 
 /* Menú. "opciones" es opcional: el cliente elige una antes de agregar. */
@@ -407,9 +409,10 @@ try{
 
 /* Mapa */
 (function(){
-  const q = encodeURIComponent(DIRECCION);
-  $("dir").textContent = DIRECCION;
-  $("mapa").src = "https://www.google.com/maps?q=" + q + "&hl=es&z=16&output=embed";
+  const q = encodeURIComponent(BUSQUEDA_MAPS);
+  $("dir").textContent = DIRECCION_TEXTO;
+  $("dir").style.display = DIRECCION_TEXTO ? "block" : "none";
+  $("mapa").src = MAPA_EMBED || ("https://www.google.com/maps?q=" + q + "&hl=es&z=16&output=embed");
   $("ruta").href = "https://www.google.com/maps/dir/?api=1&destination=" + q;
 })();
 
