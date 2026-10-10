@@ -8,8 +8,8 @@
 <meta property="og:title" content="Reyes del Barril · Asados al fuego real">
 <meta property="og:description" content="Arma tu pedido y envíalo por WhatsApp en un minuto.">
 <meta name="theme-color" content="#000000">
-<link rel="icon" type="image/png" href="favicon.png?v=2">
-<link rel="apple-touch-icon" href="favicon.png?v=2">
+<link rel="icon" type="image/png" href="favicon.png?v=3">
+<link rel="apple-touch-icon" href="favicon.png?v=3">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=Cinzel:wght@600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
@@ -239,6 +239,14 @@ section{scroll-margin-top:16px}
 
 /* Banners: misma letra que los nombres de los platos (Roboto) */
 .tabs a{font-family:"Roboto",Arial,sans-serif;font-weight:500;font-size:17px;letter-spacing:.03em}
+
+/* Nota de cobertura y horarios */
+.nota{font-size:13.5px;line-height:1.4;color:var(--tan);margin-top:8px}
+.horarios{margin:4px auto 20px;max-width:380px;text-align:left}
+.horarios .ht{font-family:var(--title);font-weight:600;font-size:20px;color:var(--tan);text-transform:uppercase;letter-spacing:.04em;text-align:center;margin-bottom:6px}
+.horarios .hr{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid #2a2a2a;font-size:15px}
+.horarios .hr span:first-child{font-weight:600;color:#f4ead9}
+.horarios .hr span:last-child{color:#cdbfa8;text-align:right}
 </style>
 </head>
 <body>
@@ -287,6 +295,7 @@ section{scroll-margin-top:16px}
 <footer>
   <strong>Calidad digna de la corona</strong>
   <p>Todos nuestros productos son preparados al calor de barril.</p>
+  <div class="horarios" id="horarios"></div>
   <a href="https://wa.me/573013919867">301 391 9867</a>
   <a href="https://instagram.com/reyesdelbarril.col">@reyesdelbarril.col</a>
 </footer>
@@ -321,8 +330,9 @@ section{scroll-margin-top:16px}
     <select id="mode"><option value="domicilio">Domicilio</option><option value="recoger">Lo recojo yo</option></select>
 
     <div id="addrBox">
-      <label for="addr">Dirección y barrio</label>
+      <label for="addr">Dirección y barrio *</label>
       <input id="addr" autocomplete="street-address" placeholder="Ej: Calle 10 # 5-20, barrio Centro">
+      <p class="nota">* Verificar por WhatsApp cobertura a su dirección.</p>
     </div>
 
     <label for="pay">Forma de pago</label>
@@ -347,6 +357,10 @@ const DELIVERY_FEE = 0;            // Costo del domicilio en pesos. 0 = no se co
 const BUSQUEDA_MAPS = "Reyes del barril, Huellas Juan Pablo II, Cartagena, Bolívar, Colombia"; // Nombre de tu negocio como aparece en Google Maps + ciudad (así sale tu pin)
 const DIRECCION_TEXTO = "Huellas Juan Pablo II, Cartagena";        // Opcional: dirección escrita que se muestra sobre el mapa. Vacío = no se muestra
 const MAPA_EMBED = "";             // Opcional: pega aquí el enlace (src) de Compartir > Insertar un mapa de Google Maps
+const HORARIOS = [                 // Día y horario que se muestran abajo en la página
+  ["Sábado", "6 PM a 11 PM"],
+  ["Domingo", "12 PM hasta agotar existencias"]
+];
 const MIN_ORDER = 0;               // Pedido mínimo en pesos. 0 = sin mínimo
 
 /* Menú. foto, etiqueta y opciones son opcionales. foto = nombre del archivo de la imagen (sin foto se muestra el barril). */
@@ -539,6 +553,9 @@ try{
   if(c){ $("name").value = c.name||""; $("addr").value = c.addr||""; $("mode").value = c.mode||"domicilio"; $("pay").value = c.pay||"Efectivo"; }
 }catch(e){}
 
+
+/* Horarios */
+$("horarios").innerHTML = `<div class="ht">Horarios</div>` + HORARIOS.map(h => `<div class="hr"><span>${esc(h[0])}</span><span>${esc(h[1])}</span></div>`).join("");
 
 /* Mapa */
 (function(){
