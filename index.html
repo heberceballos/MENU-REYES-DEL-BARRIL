@@ -247,6 +247,7 @@ section{scroll-margin-top:16px}
 .horarios .hr{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid #2a2a2a;font-size:15px}
 .horarios .hr span:first-child{font-weight:600;color:#f4ead9}
 .horarios .hr span:last-child{color:#cdbfa8;text-align:right}
+.costo{margin-top:8px;padding:9px 12px;border-radius:8px;background:#14301d;border:1px solid #2c6b43;color:#c6ebcf;font-weight:600;font-size:14.5px}
 </style>
 </head>
 <body>
@@ -333,6 +334,7 @@ section{scroll-margin-top:16px}
       <label for="addr">Dirección y barrio *</label>
       <input id="addr" autocomplete="street-address" placeholder="Ej: Calle 10 # 5-20, barrio Centro">
       <p class="nota">* Verificar por WhatsApp cobertura a su dirección.</p>
+      <p class="costo" id="costo" hidden></p>
     </div>
 
     <label for="pay">Forma de pago</label>
@@ -360,6 +362,10 @@ const MAPA_EMBED = "";             // Opcional: pega aquí el enlace (src) de Co
 const HORARIOS = [                 // Día y horario que se muestran abajo en la página
   ["Sábado", "6 PM a 11 PM"],
   ["Domingo", "12 PM hasta agotar existencias"]
+];
+const ZONAS_SIN_COSTO = [          // Barrios con domicilio sin costo ($0). Se detectan aunque escriban tildes o mayúsculas distintas
+  "parque heredia", "carioca", "manaos", "copacabana", "ipanema", "iguazu", "guanabara",
+  "flamengo", "ciudad jardin", "horizonte", "san jose", "villa grande"
 ];
 const MIN_ORDER = 0;               // Pedido mínimo en pesos. 0 = sin mínimo
 
@@ -445,10 +451,16 @@ function refreshCounts(){
   updateBar();
 }
 
+function zonaSinCosto(texto){
+  const n = texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9 ]+/g," ").replace(/\s+/g," ").trim();
+  const flat = n.replace(/ /g,"");
+  return ZONAS_SIN_COSTO.some(z => n.includes(z) || flat.includes(z.replace(/ /g,"")));
+}
+
 function totals(){
   const sub = Object.entries(cart).reduce((s,[k,q]) => s + parse(k).p.price * q, 0);
   const count = Object.values(cart).reduce((a,b) => a + b, 0);
-  const fee = ($("mode").value === "domicilio" && sub > 0) ? DELIVERY_FEE : 0;
+  const fee = ($("mode").value === "domicilio" && sub > 0 && !zonaSinCosto($("addr").value)) ? DELIVERY_FEE : 0;
   return { sub, count, fee, total: sub + fee };
 }
 
@@ -476,8 +488,11 @@ function renderCart(){
     }).join("");
   const dom = $("mode").value === "domicilio";
   $("subtotal").textContent = money(t.sub);
-  $("feeRow").style.display = DELIVERY_FEE > 0 && dom ? "flex" : "none";
+  const gratis = dom && zonaSinCosto($("addr").value);
+  $("feeRow").style.display = dom && (gratis || DELIVERY_FEE > 0) ? "flex" : "none";
   $("fee").textContent = money(t.fee);
+  $("costo").hidden = !gratis;
+  $("costo").textContent = "Costo de domicilio: $0";
   $("total").textContent = money(t.total);
   $("addrBox").style.display = dom ? "block" : "none";
 }
@@ -505,7 +520,7 @@ function send(){
     `*Pago:* ${$("pay").value}`, "",
     "*Pedido:*", ...lines, "",
     `Subtotal: ${money(t.sub)}`,
-    t.fee ? `Domicilio: ${money(t.fee)}` : null,
+    dom ? `Domicilio: ${(zonaSinCosto(addr) || DELIVERY_FEE > 0) ? money(t.fee) : "por confirmar"}` : null,
     `*Total: ${money(t.total)}*`,
     notes ? `\n*Observaciones:* ${notes}` : null
   ].filter(x => x !== null).join("\n");
@@ -544,6 +559,7 @@ $("openCart").onclick = () => { renderCart(); $("cart").showModal(); };
 $("closeCart").onclick = () => $("cart").close();
 $("cart").addEventListener("click", e => { if(e.target === $("cart")) $("cart").close(); });
 $("mode").onchange = () => { renderCart(); updateBar(); };
+$("addr").addEventListener("input", renderCart);
 $("send").onclick = send;
 $("clear").onclick = () => { cart = {}; save(); refreshCounts(); $("cart").close(); };
 
