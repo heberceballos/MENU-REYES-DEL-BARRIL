@@ -259,6 +259,9 @@ section{scroll-margin-top:16px}
   .item:hover{border-color:#3a3a3a}
 }
 @media (prefers-reduced-motion:reduce){.ph:not(.sin) img{transition:none}.item:hover .ph:not(.sin) img{transform:none}}
+.sheet p.res{color:#e0d4bf;line-height:1.6;margin:12px 0}
+.sheet .horarios{margin:14px auto}
+#resWa{text-decoration:none;margin-top:18px}
 </style>
 </head>
 <body>
@@ -363,6 +366,24 @@ section{scroll-margin-top:16px}
   </div>
 </dialog>
 
+<dialog id="reserva" aria-labelledby="resTitle">
+  <div class="sheet">
+    <header>
+      <h2 id="resTitle">Reserva tu pedido</h2>
+      <button class="close" id="closeRes" type="button" aria-label="Cerrar">×</button>
+    </header>
+    <p class="res">¡Gracias por elegir Reyes del Barril! Nos encanta que quieras disfrutar de nuestros asados al fuego real. Estos son nuestros horarios:</p>
+    <div class="horarios" id="resHorarios"></div>
+    <p class="res">Si deseas apartar un pedido para alguno de estos días, puedes pagarlo con anticipación y quedará reservado para ese día, en el horario que nos indiques por WhatsApp.</p>
+    <p class="res">Escríbenos y con gusto te atendemos.</p>
+    <a class="send" id="resWa" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.2-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.8-.1 1.4Z"/></svg>
+      Reservar por WhatsApp
+    </a>
+    <div style="text-align:center"><button class="clear" id="resBack" type="button">Volver al menú</button></div>
+  </div>
+</dialog>
+
 <script>
 /* =====================  CONFIGURACIÓN (edita aquí)  ===================== */
 const WHATSAPP = "573013919867";   // Número con código de país, sin + ni espacios
@@ -415,7 +436,7 @@ function save(){ try{ localStorage.setItem("rdb_cart", JSON.stringify(cart)); }c
 
 function renderMenu(){
   $("tabs").innerHTML = MENU.map(c => `<a href="#${slug(c.cat)}"><span class="gold">${esc(c.cat)}</span></a>`).join("")
-    + `<a href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent("Hola, quiero hacer una reserva")}" target="_blank" rel="noopener"><span class="gold">Reservas</span></a>`
+    + `<a href="#reserva" data-reserva><span class="gold">Reservas</span></a>`
     + `<a href="#ubicacion"><span class="gold">Encuéntranos</span></a>`;
   $("menu").innerHTML = MENU.map(c => `
     <section id="${slug(c.cat)}">
@@ -542,6 +563,7 @@ function send(){
 
 /* Eventos */
 document.addEventListener("click", e => {
+  if(e.target.closest("[data-reserva]")){ e.preventDefault(); $("reserva").showModal(); return; }
   const ar = e.target.closest(".arrow");
   if(ar){
     const r = ar.closest("section").querySelector(".rail");
@@ -568,6 +590,8 @@ document.addEventListener("click", e => {
 });
 $("openCart").onclick = () => { renderCart(); $("cart").showModal(); };
 $("closeCart").onclick = () => $("cart").close();
+$("closeRes").onclick = $("resBack").onclick = () => $("reserva").close();
+$("reserva").addEventListener("click", e => { if(e.target === $("reserva")) $("reserva").close(); });
 $("cart").addEventListener("click", e => { if(e.target === $("cart")) $("cart").close(); });
 $("mode").onchange = () => { renderCart(); updateBar(); };
 $("addr").addEventListener("input", renderCart);
@@ -582,7 +606,10 @@ try{
 
 
 /* Horarios */
-$("horarios").innerHTML = `<div class="ht">Horarios</div>` + HORARIOS.map(h => `<div class="hr"><span>${esc(h[0])}</span><span>${esc(h[1])}</span></div>`).join("");
+const horariosHTML = `<div class="ht">Horarios</div>` + HORARIOS.map(h => `<div class="hr"><span>${esc(h[0])}</span><span>${esc(h[1])}</span></div>`).join("");
+$("horarios").innerHTML = horariosHTML;
+$("resHorarios").innerHTML = horariosHTML;
+$("resWa").href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent("Hola, quiero reservar un pedido.\n\nDía: \nHora: \nPedido: ");
 
 /* Mapa */
 (function(){
