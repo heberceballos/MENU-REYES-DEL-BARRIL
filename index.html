@@ -262,6 +262,36 @@ section{scroll-margin-top:16px}
 .sheet p.res{color:#e0d4bf;line-height:1.6;margin:12px 0}
 .sheet .horarios{margin:14px auto}
 #resWa{text-decoration:none;margin-top:18px}
+
+/* ===== Tema Halloween ===== */
+body{position:relative}
+#hw{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:7}
+.web{position:absolute;width:170px;height:170px;pointer-events:none;opacity:.85;filter:drop-shadow(0 0 2px rgba(255,255,255,.4))}
+.web svg{display:block;width:100%;height:100%}
+.web.tl{top:0;left:0}
+.web.tr{top:0;right:0;transform:scaleX(-1)}
+.web.pg{position:absolute;z-index:7}
+.web.bl{bottom:0;left:0;transform:scaleY(-1)}
+.web.br{bottom:0;right:0;transform:scale(-1,-1)}
+@media (max-width:699px){.web{width:112px;height:112px}}
+.crit{position:absolute;left:0;top:0;will-change:transform;filter:drop-shadow(0 0 3px rgba(255,140,40,.6))}
+.crit svg{display:block;width:100%;height:100%;overflow:visible}
+.lg{transform-origin:20px 22px}
+.lg.a{animation:legA .28s ease-in-out infinite alternate}
+.lg.b{animation:legB .28s ease-in-out infinite alternate}
+@keyframes legA{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+@keyframes legB{from{transform:rotate(8deg)}to{transform:rotate(-8deg)}}
+.rest .lg{animation-play-state:paused}
+.bat{filter:drop-shadow(0 0 5px rgba(150,90,255,.7))}
+.wl{transform-origin:27px 14px;animation:flapL var(--fl,.18s) ease-in-out infinite alternate}
+.wr{transform-origin:33px 14px;animation:flapR var(--fl,.18s) ease-in-out infinite alternate}
+@keyframes flapL{from{transform:rotate(-20deg)}to{transform:rotate(28deg)}}
+@keyframes flapR{from{transform:rotate(20deg)}to{transform:rotate(-28deg)}}
+.hang{position:absolute;top:0;right:92px;transform-origin:50% 0;animation:swing 3.4s ease-in-out infinite alternate;filter:drop-shadow(0 0 3px rgba(255,140,40,.6))}
+.hang i{display:block;width:1px;height:78px;margin:0 auto;background:rgba(240,240,240,.7)}
+.hang .hs{width:34px;height:34px;transform:rotate(180deg)}
+@keyframes swing{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
+@media (prefers-reduced-motion:reduce){.lg,.wl,.wr,.hang{animation:none}}
 </style>
 </head>
 <body>
@@ -399,6 +429,7 @@ const ZONAS_SIN_COSTO = [          // Barrios con domicilio sin costo ($0). Se d
   "parque heredia", "carioca", "manaos", "copacabana", "ipanema", "iguazu", "guanabara",
   "flamengo", "ciudad jardin", "horizonte", "san jose", "villa grande"
 ];
+const TEMA_HALLOWEEN = true;       // true = arañas, telarañas y murciélagos. Pon false para quitarlo
 const MIN_ORDER = 0;               // Pedido mínimo en pesos. 0 = sin mínimo
 
 /* Menú. foto, etiqueta y opciones son opcionales. foto = nombre del archivo de la imagen (sin foto se muestra el barril). */
@@ -411,7 +442,9 @@ const MENU = [
     { id:"taquitos", name:"Taquitos del Reino", price:27000, etiqueta:"3 taquitos", foto:"taquitos-reino.jpg",
       desc:"3 taquitos de chicharrón al barril con piña y pico de gallo de casa." },
     { id:"picada", name:"Picada Festín Real", price:60000, foto:"picada-festin.jpg",
-      desc:"430 g de chicharrón al barril, 200 g de chorizo artesanal, patacones, piña asada al barril, salsa BBQ y guacamole." }
+      desc:"430 g de chicharrón al barril, 200 g de chorizo artesanal, patacones, piña asada al barril, salsa BBQ y guacamole." },
+    { id:"prohibido", name:"El Banquete Prohibido", price:35000, etiqueta:"340 g", foto:"banquete-prohibido.jpg", // OJO: confirma el precio real
+      desc:"Una tentación reservada para los paladares más atrevidos. Incluye 340 g de chicharrón al barril, patacones dorados, piña asada al barril, guacamole y salsa BBQ de la casa." }
   ]},
   { cat:"Adicionales", items:[
     { id:"chorizo", name:"Chorizo Imperial", price:6000, foto:"chorizo-imperial.jpg", desc:"Chorizo artesanal antioqueño." }
@@ -622,6 +655,113 @@ $("resWa").href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent("H
 
 renderMenu();
 window.addEventListener("resize", updateArrows);
+
+/* ===== Tema Halloween: telarañas, arañas caminando y murciélagos ===== */
+function initHalloween(){
+  if(!TEMA_HALLOWEEN) return;
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const small = innerWidth < 700;
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+
+  /* Telaraña: hilos radiales + anillos caídos hacia la esquina, con algunos hilos rotos y gotitas de rocío */
+  function webSVG(){
+    const S = 200, N = 8, R = 7, ang = [];
+    for(let i = 0; i < N; i++) ang.push((i / (N - 1)) * Math.PI / 2 + ((i > 0 && i < N - 1) ? (rnd() - .5) * .09 : 0));
+    let radial = "", rings = "", dots = "";
+    ang.forEach(a => { const L = S * (.88 + rnd() * .12); radial += `M0 0L${(Math.cos(a) * L).toFixed(1)} ${(Math.sin(a) * L).toFixed(1)}`; });
+    for(let k = 1; k <= R; k++){
+      const r = S * (k / R) * .96;
+      for(let i = 0; i < N - 1; i++){
+        if(k > 3 && rnd() < .07) continue;
+        const a1 = ang[i], a2 = ang[i + 1];
+        const x1 = Math.cos(a1) * r, y1 = Math.sin(a1) * r, x2 = Math.cos(a2) * r, y2 = Math.sin(a2) * r;
+        const sag = .09 + rnd() * .07;
+        rings += `M${x1.toFixed(1)} ${y1.toFixed(1)}Q${(((x1 + x2) / 2) * (1 - sag)).toFixed(1)} ${(((y1 + y2) / 2) * (1 - sag)).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+        if(rnd() < .16) dots += `<circle cx="${x2.toFixed(1)}" cy="${y2.toFixed(1)}" r="1.5" fill="rgba(255,255,255,.85)"/>`;
+      }
+    }
+    return `<svg viewBox="0 0 200 200" aria-hidden="true"><path d="${radial}" stroke="rgba(240,240,240,.8)" stroke-width="1.15" fill="none" stroke-linecap="round"/><path d="${rings}" stroke="rgba(240,240,240,.62)" stroke-width=".85" fill="none" stroke-linecap="round"/>${dots}</svg>`;
+  }
+
+  /* Araña mirando hacia arriba (la rotamos según hacia dónde camina) */
+  function spiderSVG(){
+    const L = (d) => `<path d="${d}"/>`;
+    const left = ["M17 18L9 10L4 13","M16.5 21L7 17L2 21","M16.5 24L7 26L3 31","M17.5 27L10 32L7 37"];
+    const mir = d => d.replace(/(-?\d+\.?\d*) (-?\d+\.?\d*)/g,(m,x,y)=>`${(40 - parseFloat(x))} ${y}`);
+    const right = left.map(mir);
+    const ga = [left[0], right[1], left[2], right[3]].map(L).join("");
+    const gb = [right[0], left[1], right[2], left[3]].map(L).join("");
+    return `<svg viewBox="0 0 40 40" aria-hidden="true"><g fill="none" stroke="#ff9a3c" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" opacity=".92"><g class="lg a">${ga}</g><g class="lg b">${gb}</g></g><ellipse cx="20" cy="24.5" rx="5.2" ry="7.2" fill="#14100d" stroke="#ff9a3c" stroke-width=".8"/><ellipse cx="20" cy="15.5" rx="3.7" ry="3.9" fill="#14100d" stroke="#ff9a3c" stroke-width=".8"/><circle cx="18.6" cy="14.6" r=".95" fill="#ff2a1a"/><circle cx="21.4" cy="14.6" r=".95" fill="#ff2a1a"/></svg>`;
+  }
+
+  /* Murciélago con alas que aletean */
+  function batSVG(){
+    const wing = "M27 14Q18 4 3 10Q7 12 8 17Q12 14 14 20Q18 16 20 22Q23 18 26 22Z";
+    return `<svg viewBox="0 0 60 32" aria-hidden="true"><g fill="#26143d" stroke="#a070e8" stroke-width=".8" stroke-linejoin="round"><g class="wl"><path d="${wing}"/></g><g class="wr"><path d="${wing}" transform="translate(60 0) scale(-1 1)"/></g><ellipse cx="30" cy="17.5" rx="4.2" ry="6.4"/><circle cx="30" cy="10.5" r="3.6"/><path d="M27.4 8L26.4 2.5L29.2 6.6Z"/><path d="M32.6 8L33.6 2.5L30.8 6.6Z"/></g><circle cx="28.7" cy="10.2" r=".8" fill="#ff9a3c"/><circle cx="31.3" cy="10.2" r=".8" fill="#ff9a3c"/></svg>`;
+  }
+
+  const layer = document.createElement("div");
+  layer.id = "hw"; layer.setAttribute("aria-hidden", "true");
+  ["tl","tr"].forEach(c => { const w = document.createElement("div"); w.className = "web " + c; w.innerHTML = webSVG(); layer.appendChild(w); });
+  const hang = document.createElement("div"); hang.className = "hang";
+  hang.innerHTML = `<i></i><div class="hs">${spiderSVG()}</div>`; layer.appendChild(hang);
+  document.body.appendChild(layer);
+  ["bl","br"].forEach(c => { const w = document.createElement("div"); w.className = "web pg " + c; w.innerHTML = webSVG(); document.body.appendChild(w); });
+  if(reduce) return;
+
+  /* Arañas caminando por la pantalla */
+  const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
+  const spiders = [];
+  for(let i = 0; i < (small ? 3 : 5); i++){
+    const el = document.createElement("div"), sz = 30 + Math.random() * 14;
+    el.className = "crit"; el.style.width = el.style.height = sz + "px"; el.innerHTML = spiderSVG(); layer.appendChild(el);
+    spiders.push({ el, sz, x: Math.random() * innerWidth, y: Math.random() * innerHeight, a: Math.random() * 6.28, ta: 0, v: 35 + Math.random() * 35, t: 1 + Math.random() * 2, rest: 0 });
+  }
+  /* Murciélagos volando */
+  const bats = [];
+  function resetBat(b, first){
+    b.dir = Math.random() < .5 ? 1 : -1; b.sz = 46 + Math.random() * 34; b.v = 90 + Math.random() * 80;
+    b.y0 = innerHeight * (.08 + Math.random() * .5); b.amp = 15 + Math.random() * 35; b.f = 1.2 + Math.random() * 1.8; b.ph = Math.random() * 6.28;
+    b.x = b.dir > 0 ? -b.sz : innerWidth + b.sz; b.wait = first ? Math.random() * 4 : 2 + Math.random() * 7;
+    b.el.style.width = b.sz + "px"; b.el.style.height = (b.sz * .533) + "px"; b.el.style.setProperty("--fl", (.14 + Math.random() * .08) + "s"); b.el.style.visibility = "hidden";
+  }
+  for(let i = 0; i < (small ? 2 : 3); i++){
+    const el = document.createElement("div"); el.className = "crit bat"; el.innerHTML = batSVG(); layer.appendChild(el);
+    const b = { el, t: Math.random() * 10 }; resetBat(b, true); bats.push(b);
+  }
+
+  let last = performance.now();
+  function tick(now){
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    const W = innerWidth, H = innerHeight, m = 26;
+    for(const s of spiders){
+      if(s.rest > 0){ s.rest -= dt; if(s.rest <= 0) s.el.classList.remove("rest"); }
+      else {
+        s.t -= dt;
+        if(s.t <= 0){ s.t = 1 + Math.random() * 2.5; s.ta = s.a + (Math.random() - .5) * 1.6; if(Math.random() < .18){ s.rest = .6 + Math.random() * 1.4; s.el.classList.add("rest"); } }
+        if(s.x < m) s.ta = (Math.random() - .5) * .8;
+        else if(s.x > W - m) s.ta = Math.PI + (Math.random() - .5) * .8;
+        if(s.y < m) s.ta = Math.PI / 2 + (Math.random() - .5) * .8;
+        else if(s.y > H - m) s.ta = -Math.PI / 2 + (Math.random() - .5) * .8;
+        s.a += wrap(s.ta - s.a) * Math.min(1, dt * 4);
+        s.x += Math.cos(s.a) * s.v * dt; s.y += Math.sin(s.a) * s.v * dt;
+      }
+      s.el.style.transform = `translate(${(s.x - s.sz / 2).toFixed(1)}px,${(s.y - s.sz / 2).toFixed(1)}px) rotate(${(s.a + Math.PI / 2).toFixed(3)}rad)`;
+    }
+    for(const b of bats){
+      if(b.wait > 0){ b.wait -= dt; continue; }
+      b.el.style.visibility = "visible"; b.t += dt;
+      b.x += b.dir * b.v * dt;
+      const y = b.y0 + Math.sin(b.t * b.f + b.ph) * b.amp;
+      b.el.style.transform = `translate(${b.x.toFixed(1)}px,${y.toFixed(1)}px)`;
+      if((b.dir > 0 && b.x > W + b.sz) || (b.dir < 0 && b.x < -b.sz * 2)) resetBat(b, false);
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+initHalloween();
+
 
 /* Animación de las llamas (se detiene si la persona prefiere menos movimiento) */
 (function(){
