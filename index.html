@@ -292,6 +292,11 @@ body{position:relative}
 .hang .hs{width:34px;height:34px;transform:rotate(180deg)}
 @keyframes swing{from{transform:rotate(-6deg)}to{transform:rotate(6deg)}}
 @media (prefers-reduced-motion:reduce){.lg,.wl,.wr,.hang{animation:none}}
+
+/* Etiqueta "Nuevo" */
+.nuevo{position:absolute;top:10px;left:10px;background:#ee6a14;color:#fff;font-weight:700;font-size:12px;line-height:1;padding:6px 10px;border-radius:6px;box-shadow:0 2px 8px rgba(0,0,0,.55);animation:nuevoPulse 2.4s ease-in-out infinite}
+@keyframes nuevoPulse{0%,100%{box-shadow:0 2px 8px rgba(0,0,0,.55),0 0 0 0 rgba(238,106,20,.55)}50%{box-shadow:0 2px 8px rgba(0,0,0,.55),0 0 0 7px rgba(238,106,20,0)}}
+@media (prefers-reduced-motion:reduce){.nuevo{animation:none}}
 </style>
 </head>
 <body>
@@ -443,8 +448,8 @@ const MENU = [
       desc:"3 taquitos de chicharrón al barril con piña y pico de gallo de casa." },
     { id:"picada", name:"Picada Festín Real", price:60000, foto:"picada-festin.jpg",
       desc:"430 g de chicharrón al barril, 200 g de chorizo artesanal, patacones, piña asada al barril, salsa BBQ y guacamole." },
-    { id:"prohibido", name:"El Banquete Prohibido", price:35000, etiqueta:"340 g", foto:"banquete-prohibido.jpg", // OJO: confirma el precio real
-      desc:"Una tentación reservada para los paladares más atrevidos. Incluye 340 g de chicharrón al barril, patacones dorados, piña asada al barril, guacamole y salsa BBQ de la casa." }
+    { id:"prohibido", name:"El Banquete Prohibido", price:40000, etiqueta:"340 g", nuevo:true, foto:"banquete-prohibido.jpg",
+      desc:"340 g de chicharrón al barril con patacones dorados, piña asada al barril, guacamole y salsa BBQ de la casa." }
   ]},
   { cat:"Adicionales", items:[
     { id:"chorizo", name:"Chorizo Imperial", price:6000, foto:"chorizo-imperial.jpg", desc:"Chorizo artesanal antioqueño." }
@@ -485,6 +490,7 @@ function renderMenu(){
           <div class="ph${p.foto ? "" : " sin"}">
             ${p.foto ? `<img src="${esc(p.foto)}" alt="${esc(p.name)}" loading="lazy">` : `<img class="ph-logo" src="barril.webp" alt="" loading="lazy">`}
             ${p.etiqueta ? `<span class="tagp">${esc(p.etiqueta)}</span>` : ""}
+            ${p.nuevo ? `<span class="nuevo">Nuevo</span>` : ""}
           </div>
           <div class="cb">
             <h3>${esc(p.name)}</h3>
